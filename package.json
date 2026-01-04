@@ -1,0 +1,39 @@
+{
+    "name": "@vitkuz/aws-logger",
+    "version": "1.3.0",
+    "description": "Standardized AWS Logger using Winston",
+    "main": "dist/index.js",
+    "module": "dist/index.mjs",
+    "types": "dist/index.d.ts",
+    "scripts": {
+        "pub": "npm publish --access public",
+        "build": "tsup",
+        "dev": "tsup --watch",
+        "test:manual": "tsx test/manual.ts",
+        "test:lambda-sim": "tsx test/lambda-simulation.test.ts",
+        "test:redaction": "tsx test/redaction-test.ts",
+        "test:async-context": "tsx test/async-context.test.ts",
+        "test:wrapper": "tsx test/wrapper.test.ts",
+        "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+        "prepublishOnly": "npm run format && npm run build"
+    },
+    "dependencies": {
+        "winston": "^3.11.0"
+    },
+    "devDependencies": {
+        "@types/node": "^20.10.0",
+        "prettier": "^3.7.4",
+        "tsup": "^8.0.1",
+        "tsx": "^4.7.0",
+        "typescript": "^5.3.3"
+    },
+    "author": "Vitali Kuzmenka",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/vitkuz/vitkuz-aws-logger.git"
+    },
+    "bugs": {
+        "url": "https://github.com/vitkuz/vitkuz-aws-logger/issues"
+    },
+    "homepage": "https://github.com/vitkuz/vitkuz-aws-logger#readme"
+}

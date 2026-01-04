@@ -1,0 +1,16 @@
+
+> @vitkuz/aws-logger@1.0.0 test:redaction
+> tsx test/redaction-test.ts
+
+--- Redaction Test ---
+
+--> Initializing Logger with Redaction Config
+Logging complex object with sensitive data...
+
+Expected Redactions:
+- userId: Hashed (sha256)
+- password: *****
+- api_key: *****
+- customSecret: REMOVED
+- token: *****
+- pin: ***** (inside array)
