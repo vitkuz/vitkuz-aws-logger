@@ -1,6 +1,6 @@
 {
     "name": "@vitkuz/aws-logger",
-    "version": "1.3.0",
+    "version": "1.4.0",
     "description": "Standardized AWS Logger using Winston",
     "main": "dist/index.js",
     "module": "dist/index.mjs",

@@ -4,6 +4,7 @@ import { Logger } from './types';
 // We store a reference to the logger so we can update it in-place for the current context
 interface LoggerStore {
     logger: Logger;
+    requestId?: string;
 }
 
 const asyncLocalStorage = new AsyncLocalStorage<LoggerStore>();
@@ -12,21 +13,24 @@ const asyncLocalStorage = new AsyncLocalStorage<LoggerStore>();
  * Runs a callback within a logger context.
  * The logger provided becomes the "current" logger for the duration of the callback.
  */
-export const runWithLogger = <T>(logger: Logger, callback: () => T): T => {
-    return asyncLocalStorage.run({ logger }, callback);
+export const runWithLogger = <T>(logger: Logger, callback: () => T, requestId?: string): T => {
+    return asyncLocalStorage.run({ logger, requestId }, callback);
 };
 
 /**
  * Gets the current logger from the async context.
- * Throws an error if called outside of a runWithLogger context,
- * unless a fallback is provided (though usually we want to enforce context).
- *
- * To make it easier to use, we can return undefined or a default logger if needed,
- * but for this specific feature request "access by all down the stream", strictness is good.
  */
 export const getLogger = (): Logger | undefined => {
     const store = asyncLocalStorage.getStore();
     return store?.logger;
+};
+
+/**
+ * Gets the current request ID from the async context.
+ */
+export const getRequestId = (): string | undefined => {
+    const store = asyncLocalStorage.getStore();
+    return store?.requestId;
 };
 
 /**

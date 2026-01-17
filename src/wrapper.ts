@@ -56,26 +56,30 @@ export const withLogger = <TEvent = any, TResult = any>(
         scopedLogger.debug('Lambda Context', { context });
 
         // 4. Run Handler in Context
-        return runWithLogger(scopedLogger, async () => {
-            // We use 'await' to ensure the context stays active during the handler execution
-            // If the handler accepts a callback, we might need special handling?
-            // Most modern lambdas use async/await.
-            // If legacy callback style is used, AsyncLocalStorage context *should* still propagate
-            // if the callback is invoked asynchronously.
-            // But we wrap the result in Promise usually.
+        return runWithLogger(
+            scopedLogger,
+            async () => {
+                // We use 'await' to ensure the context stays active during the handler execution
+                // If the handler accepts a callback, we might need special handling?
+                // Most modern lambdas use async/await.
+                // If legacy callback style is used, AsyncLocalStorage context *should* still propagate
+                // if the callback is invoked asynchronously.
+                // But we wrap the result in Promise usually.
 
-            // Supporting both async and callback style:
-            try {
-                // If it returns a promise, await it
-                const result = await handler(event, context, callback);
-                return result as TResult;
-            } catch (error) {
-                // We could log unhandled errors here too?
-                // Standard lambda practice is to let the error propagate so Lambda runtime sees it (and retries etc)
-                // BUT we should log it first because once it leaves here, we might lose the logger context behavior.
-                scopedLogger.error('Unhandled Lambda Exception', error as Error);
-                throw error;
-            }
-        });
+                // Supporting both async and callback style:
+                try {
+                    // If it returns a promise, await it
+                    const result = await handler(event, context, callback);
+                    return result as TResult;
+                } catch (error) {
+                    // We could log unhandled errors here too?
+                    // Standard lambda practice is to let the error propagate so Lambda runtime sees it (and retries etc)
+                    // BUT we should log it first because once it leaves here, we might lose the logger context behavior.
+                    scopedLogger.error('Unhandled Lambda Exception', error as Error);
+                    throw error;
+                }
+            },
+            requestContext.requestId
+        );
     };
 };
